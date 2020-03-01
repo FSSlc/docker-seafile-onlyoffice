@@ -2,7 +2,12 @@
 # -*- coding: utf-8 -*-
 
 import urllib
-import urllib2
+
+try:
+    import urllib2
+except ImportError:
+    import urllib.request as urllib2
+
 import json
 import requests
 import sys

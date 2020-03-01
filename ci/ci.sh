@@ -11,8 +11,8 @@ set -e -x
     make pro-server
 )
 
-mkdir -p /opt/seafile-data
-docker run -d --name seafile -e SEAFILE_SERVER_HOSTNAME=127.0.0.1 -v /opt/seafile-data:/shared -p 80:80 -p 443:443 fsslc/seafile-pro:$version
+mkdir -p ${PWD}/data
+docker run -d --name seafile -e SEAFILE_SERVER_HOSTNAME=127.0.0.1 -v ${PWD}/data:/shared -p 80:80 -p 443:443 fsslc/seafile-pro:$version
 
 cat > doc.md <<EOF
 # Doc
@@ -27,7 +27,7 @@ docker restart seafile
 sleep 30
 python ci/validate_file.py doc.md
 docker rm -f seafile
-docker run -d --name seafile -e SEAFILE_SERVER_HOSTNAME=127.0.0.1 -v /opt/seafile-data:/shared -p 80:80 -p 443:443 fsslc/seafile-pro:$version
+docker run -d --name seafile -e SEAFILE_SERVER_HOSTNAME=127.0.0.1 -v ${PWD}/data:/shared -p 80:80 -p 443:443 fsslc/seafile-pro:$version
 sleep 30
 python ci/validate_file.py doc.md
 
