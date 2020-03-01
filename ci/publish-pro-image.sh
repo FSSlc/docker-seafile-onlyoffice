@@ -9,7 +9,8 @@
 set -e
 set -o pipefail
 
-docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+# refer: https://docs.travis-ci.com/user/docker/#branch-based-registry-pushes
+echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
 ## Always use the base image we build manually to reduce the download size of the end user.
 docker rm -f $(docker ps -a -q)

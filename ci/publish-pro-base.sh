@@ -9,7 +9,8 @@
 set -e
 set -o pipefail
 
-docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+# refer: https://docs.travis-ci.com/user/docker/#branch-based-registry-pushes
+echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
 (
     cd image
