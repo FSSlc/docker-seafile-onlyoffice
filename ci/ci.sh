@@ -33,12 +33,6 @@ python ci/validate_file.py doc.md
 
 rm -rf doc.md
 
-if [[ $TRAVIS_TAG =~ ^v([0-9]*?)(\.([0-9])*?){2}-pro$ ]]; then
-    ci/publish-pro-image.sh
-elif [[ $TRAVIS_TAG =~ ^seafile-pro-base$ ]]; then
-    ci/publish-pro-base.sh
-elif [[ $TRAVIS_TAG =~ ^seafile-base$ ]]; then
-    ci/publish-base.sh
-else
-    echo "Not going to push the image to docker hub, since it's not a build triggered by a tag"
-fi
+bash ci/publish-base.sh
+bash ci/publish-pro-base.sh
+bash ci/publish-pro-image.sh
