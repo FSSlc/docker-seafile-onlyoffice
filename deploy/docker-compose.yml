@@ -1,0 +1,46 @@
+version: '2.0'
+services:
+  seafile:
+    image: fsslc/seafile-pro:6.3.13
+    container_name: seafile
+    ports:
+      - "80:80"
+      # - "8443:443"  # If https is enabled, cancel the comment.
+    volumes:
+      - ./data/seafile-data:/shared   # Requested, specifies the path to Seafile data persistent store.
+      - ./conf/seafile.nginx.conf.template:/templates/seafile.nginx.conf.template
+      - ./conf/bootstrap.py:/scripts/bootstrap.py
+    environment:
+      - TIME_ZONE=Asia/Shanghai # Optional, default is UTC. Should be uncomment and set to your local time zone.
+      - SEAFILE_ADMIN_EMAIL=liuc@fsslc.cn # Specifies Seafile admin user, default is 'me@example.com'
+      - SEAFILE_ADMIN_PASSWORD=fsslc     # Specifies Seafile admin password, default is 'asecret'
+      - SEAFILE_SERVER_LETSENCRYPT=false   # Whether to use https or not
+      - SEAFILE_SERVER_HOSTNAME=172.19.0.5 # Specifies your host name if https is enabled
+    networks:
+      seafile-net:
+        ipv4_address: 172.19.0.5
+
+  onlyoffice:
+    image: onlyoffice/documentserver
+    container_name: onlyoffice
+    ports:
+      - "8848:80"
+    depends_on:
+      - seafile
+    networks:
+      seafile-net:
+        ipv4_address: 172.19.0.6
+
+      # - 7443:443
+    # volumes:
+    #   - ./data/onlyoffice-data/logs:/var/log/onlyoffice
+    #   - ./data/onlyoffice-data/data:/var/www/onlyoffice/Data
+    #   - ./data/onlyoffice-data/lib:/var/lib/onlyoffice
+    #   - ./data/onlyoffice-data/db:/var/lib/postgresql
+
+
+networks:
+  seafile-net:
+    ipam:
+      config:
+      - subnet: 172.19.0.0/16
